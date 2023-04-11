@@ -11,11 +11,13 @@ use Illuminate\Http\Client\PendingRequest;
 
 class Client extends BaseClient implements HttpClient
 {
-    public function __construct(protected Factory $http, protected Repository $cache, array $config = [])
+    private PendingRequest $http;
+
+    public function __construct(Factory $factory, protected Repository $cache, array $config = [])
     {
         $this->processOptions($config);
 
-        $this->http->asJson()
+        $this->http = $factory->asJson()
             ->baseUrl($this->config['url'])
             ->connectTimeout(80)
             ->timeout(30);
