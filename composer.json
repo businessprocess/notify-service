@@ -22,12 +22,10 @@
     }
   },
   "extra": {
-    "extra": {
-      "laravel": {
-        "providers": [
-          "NotificationChannels\\NotificationServiceProvider"
-        ]
-      }
+    "laravel": {
+      "providers": [
+        "NotificationChannels\\NotificationServiceProvider"
+      ]
     }
   }
 }
