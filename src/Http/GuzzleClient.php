@@ -25,6 +25,8 @@ class GuzzleClient extends BaseClient implements HttpClient
                 'http_errors' => true,
             ],
         ]);
+
+        $this->authenticate();
     }
 
     /**
@@ -33,8 +35,8 @@ class GuzzleClient extends BaseClient implements HttpClient
      */
     public function authenticate(): void
     {
-        if (isset($config['login']) && isset($config['password'])) {
-            $config['authentication'] = $this->getHttp()->post('login', [
+        if (isset($this->config['login']) && isset($this->config['password'])) {
+            $this->config['authentication'] = $this->getHttp()->post('login', [
                 RequestOptions::JSON => [
                     'login' => $this->config['login'],
                     'password' => $this->config['password'],
@@ -42,7 +44,7 @@ class GuzzleClient extends BaseClient implements HttpClient
             ]);
         }
 
-        if (!isset($config['authentication'])) {
+        if (!isset($this->config['authentication'])) {
             throw new \InvalidArgumentException('Authentication is required');
         }
     }

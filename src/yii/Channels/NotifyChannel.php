@@ -14,14 +14,13 @@ class NotifyChannel extends \yii\base\BaseObject
     public function __construct(array $config)
     {
         $this->client = new GuzzleClient($config);
-
-        parent::__construct($config);
     }
 
     public function send($notifiable, Notification $notification): void
     {
         $params = call_user_func([$notification, 'toNotify'], compact('notifiable'));
+        $params = is_array($params) ? $params : $params->toArray();
 
-        $this->client->post('notifications', (array)$params);
+        $this->client->post('notifications', $params);
     }
 }

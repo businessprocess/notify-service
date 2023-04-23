@@ -146,11 +146,9 @@ composer require businessprocess/notify-service
                 'channels' => [
                     'notify' => [
                         'class' => 'NotificationChannels\yii\Channels\NotifyChannel',
-                        'config' => [
-                            'url' => $params['notifyService']['login']
-                            'login' => $params['notifyService']['login'],
-                            'password' => $params['notifyService']['login'],
-                        ],
+                        'url' => $params['notifyService']['url'],
+                        'login' => $params['notifyService']['login'],
+                        'password' => $params['notifyService']['password'],
                     ],            
                 ],
             ],
@@ -167,7 +165,7 @@ use NotificationChannels\Models\NotifyService\Notice;
 
 class EmailNotification extends Notification
 {
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['notify'];
     } 

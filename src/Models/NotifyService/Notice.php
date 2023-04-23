@@ -186,6 +186,10 @@ class Notice
 
     protected function getTimeToDelivery(): ?string
     {
+        if (is_null($this->timeToDelivery)) {
+            return $this->timeToDelivery;
+        }
+
         if ($this->timeToDelivery->getTimestamp() < time()) {
             throw new \InvalidArgumentException('Delivery date cannot be in the past');
         }

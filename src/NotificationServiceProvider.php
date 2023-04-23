@@ -13,7 +13,7 @@ use NotificationChannels\Channels\SmartSenderChannel;
 use NotificationChannels\Http\Client;
 use NotificationChannels\Models\NotifyService\Notice;
 
-class MessengerServiceProvider extends ServiceProvider implements DeferrableProvider
+class NotificationServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * All the container singletons that should be registered.

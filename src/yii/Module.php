@@ -19,7 +19,7 @@ class Module extends \yii\base\Module
                 $channel->send($notifiable, clone $notification);
             } catch (\Exception $e) {
                 if (YII_DEBUG) {
-                    throw new NotificationMessengerException('Notification sending error');
+                    throw new NotificationMessengerException($e->getMessage());
                 }
                 Yii::warning("Notification sent by channel [$driver] has failed: " . $e->getMessage(), __METHOD__);
                 Yii::warning($e, __METHOD__);
@@ -33,8 +33,8 @@ class Module extends \yii\base\Module
             throw new InvalidParamException("Unknown channel [{$driver}]");
         }
 
-        if (!isset($this->channels[$driver])) {
-            $this->channels[$driver] = $this->createChannel($this->channels[$driver]['config'] ?? []);
+        if (!is_object($this->channels[$driver])) {
+            $this->channels[$driver] = $this->createChannel($this->channels[$driver]);
         }
 
         return $this->channels[$driver];

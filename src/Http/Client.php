@@ -4,7 +4,6 @@ namespace NotificationChannels\Http;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Cache;
 use NotificationChannels\Contracts\HttpClient;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
@@ -31,8 +30,8 @@ class Client extends BaseClient implements HttpClient
      */
     public function authenticate(): void
     {
-        if (isset($config['login']) && isset($config['password'])) {
-            $config['authentication'] = $this->cache->remember(__CLASS__, 12 * 3600, function () {
+        if (isset($this->config['login']) && isset($this->config['password'])) {
+            $this->config['authentication'] = $this->cache->remember(__CLASS__, 12 * 3600, function () {
                 return $this->http->post('login', [
                     'login' => $this->config['login'],
                     'password' => $this->config['password'],
@@ -40,7 +39,7 @@ class Client extends BaseClient implements HttpClient
             });
         }
 
-        if (!isset($config['authentication'])) {
+        if (!isset($this->config['authentication'])) {
             throw new \InvalidArgumentException('Authentication is required');
         }
 
