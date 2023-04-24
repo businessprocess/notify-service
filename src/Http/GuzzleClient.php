@@ -60,10 +60,10 @@ class GuzzleClient extends BaseClient implements HttpClient
     /**
      * @param string $uri
      * @param array $options
-     * @return array
+     * @return array|null
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function post(string $uri, array $options = []): array
+    public function post(string $uri, array $options = []): ?array
     {
         $response = $this->getHttp()->post($uri, [
             RequestOptions::HEADERS => [

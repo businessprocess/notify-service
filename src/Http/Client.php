@@ -60,10 +60,10 @@ class Client extends BaseClient implements HttpClient
     /**
      * @param string $uri
      * @param array $options
-     * @return array
+     * @return array|null
      * @throws RequestException
      */
-    public function post(string $uri, array $options = []): array
+    public function post(string $uri, array $options = []): ?array
     {
         return $this->getHttp()->post($uri, $options)->throw()->json();
     }
