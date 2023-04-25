@@ -36,12 +36,14 @@ class GuzzleClient extends BaseClient implements HttpClient
     public function authenticate(): void
     {
         if (isset($this->config['login']) && isset($this->config['password'])) {
-            $this->config['authentication'] = $this->getHttp()->post('login', [
+            $response = $this->getHttp()->post('login', [
                 RequestOptions::JSON => [
                     'login' => $this->config['login'],
                     'password' => $this->config['password'],
                 ]
             ]);
+
+            $this->config['authentication'] = json_decode($response->getBody()->getContents(), true)['authToken'];
         }
 
         if (!isset($this->config['authentication'])) {
