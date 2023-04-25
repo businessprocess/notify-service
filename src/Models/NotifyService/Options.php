@@ -24,10 +24,10 @@ class Options
         return $this;
     }
 
-    public function email($subject = null, ?string $from = null): Email
+    public function email($subject = null, ?string $from = null, $isHtml = null): Email
     {
-        if (is_array($subject) && isset($subject['from'], $subject['subject'])) {
-            [$from, $subject] = [$subject['from'], $subject['subject']];
+        if (is_array($subject)) {
+            return $this->email->fill($subject);
         }
         if (!is_null($subject)) {
             $this->email->setSubject($subject);
@@ -35,6 +35,9 @@ class Options
         if (!is_null($from)) {
             $this->email->setFrom($from);
         }
+
+        $this->email->setIsHtml($isHtml);
+
         return $this->email;
     }
 
