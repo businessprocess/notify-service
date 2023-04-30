@@ -3,25 +3,33 @@
 namespace NotificationChannels\Models\NotifyService;
 
 use DateTimeInterface;
+use NotificationChannels\Models\NotifyService\Traits\Fillable;
 
 class Notice
 {
+    use Fillable;
+
     protected string $profileUuid;
+
     protected string $langCode;
 
     protected Destination $destination;
+
     protected Data $data;
+
     protected Options $options;
 
     protected ?string $text = null;
+
     protected ?DateTimeInterface $timeToDelivery = null;
 
     protected ?string $key = null;
+
     protected ?string $emitter = null;
 
     public function __construct($profileUuid = null)
     {
-        if (!is_null($profileUuid)) {
+        if (! is_null($profileUuid)) {
             $this->setProfileUuid($profileUuid);
         }
         $this->destination = new Destination();
@@ -32,17 +40,6 @@ class Notice
     public static function create($data = []): static
     {
         return (new static())->fill($data);
-    }
-
-    public function fill(array $data = []): static
-    {
-        foreach ($data as $method => $value) {
-            $method = 'set' . ucfirst($method);
-            if (method_exists($this, $method)) {
-                $this->{$method}($value);
-            }
-        }
-        return $this;
     }
 
     public function toArray(): array
@@ -87,11 +84,11 @@ class Notice
 
     protected function getData(): ?array
     {
-        if ($this->data->isEmpty() && !$this->getText()) {
+        if ($this->data->isEmpty() && ! $this->getText()) {
             throw new \InvalidArgumentException('Text or data is required');
         }
 
-        if (!$this->data->isEmpty() && $this->getText()) {
+        if (! $this->data->isEmpty() && $this->getText()) {
             throw new \LogicException('Text cannot be used together data');
         }
 
@@ -144,6 +141,7 @@ class Notice
         if ($this->destination->isEmpty()) {
             throw new \InvalidArgumentException('Destination is required');
         }
+
         return $this->destination->toArray();
     }
 
@@ -164,9 +162,6 @@ class Notice
         return $this->options->toArray();
     }
 
-    /**
-     * @return Options
-     */
     public function options(): Options
     {
         return $this->options;
@@ -197,7 +192,7 @@ class Notice
         return $this->timeToDelivery->format('Y-m-d H:i:s');
     }
 
-    public function setTimeToDelivery(\DateTimeInterface|string $timeToDelivery): static
+    public function setTimeToDelivery(DateTimeInterface|string $timeToDelivery): static
     {
         try {
             $this->timeToDelivery = is_string($timeToDelivery)

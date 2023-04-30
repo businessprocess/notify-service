@@ -9,9 +9,6 @@ use NotificationChannels\Exceptions\NotificationMessengerException;
 class MessengerChannel extends BaseChannel
 {
     /**
-     * @param $notifiable
-     * @param Notification $notification
-     * @return void
      * @throws GuzzleException
      * @throws NotificationMessengerException
      * @throws \Throwable
@@ -28,7 +25,7 @@ class MessengerChannel extends BaseChannel
             $this->client->post('/receiveMessage', [
                 'body' => $body,
                 'phone' => $to,
-                'project_id' => (int)$this->client->config('project_id'),
+                'project_id' => (int) $this->client->config('project_id'),
                 'messenger' => $this->client->config('messenger'),
                 'sendAll' => $this->client->config('sendAll'),
                 'callback_url' => $this->client->config('callback_url'),

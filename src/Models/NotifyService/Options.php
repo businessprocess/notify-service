@@ -21,6 +21,7 @@ class Options
                 $this->{$method}($value);
             }
         }
+
         return $this;
     }
 
@@ -29,10 +30,10 @@ class Options
         if (is_array($subject)) {
             return $this->email->fill($subject);
         }
-        if (!is_null($subject)) {
+        if (! is_null($subject)) {
             $this->email->setSubject($subject);
         }
-        if (!is_null($from)) {
+        if (! is_null($from)) {
             $this->email->setFrom($from);
         }
 

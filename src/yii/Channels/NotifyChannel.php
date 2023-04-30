@@ -3,8 +3,8 @@
 namespace NotificationChannels\yii\Channels;
 
 use NotificationChannels\Contracts\HttpClient;
-use NotificationChannels\Exceptions\NotificationMessengerException;
 use NotificationChannels\Http\GuzzleClient;
+use NotificationChannels\yii\Cache\Repository;
 use NotificationChannels\yii\Notification;
 
 class NotifyChannel extends \yii\base\BaseObject
@@ -13,7 +13,7 @@ class NotifyChannel extends \yii\base\BaseObject
 
     public function __construct(array $config)
     {
-        $this->client = new GuzzleClient($config);
+        $this->client = new GuzzleClient(new Repository, $config);
     }
 
     public function send($notifiable, Notification $notification): void

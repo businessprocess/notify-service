@@ -5,20 +5,20 @@ namespace NotificationChannels;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Notifications\ChannelManager;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\ServiceProvider;
 use NotificationChannels\Channels\MessengerChannel;
 use NotificationChannels\Channels\NotifyChannel;
 use NotificationChannels\Channels\SmartSenderChannel;
 use NotificationChannels\Http\Client;
 use NotificationChannels\Models\NotifyService\Notice;
+use NotificationChannels\Services\NotifyService;
 
 class NotificationServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * All the container singletons that should be registered.
-     *
-     * @var array
      */
     public array $singletons = [
         'messenger' => MessengerChannel::class,
@@ -45,10 +45,20 @@ class NotificationServiceProvider extends ServiceProvider implements DeferrableP
                     $config = $app['config']['notification-channels'][$driver];
 
                     return $app->make($driver, [
-                        'client' => $app->make(Client::class, compact('config'))
+                        'client' => $app->make(Client::class, compact('config')),
                     ]);
                 });
             }
+        });
+
+        $this->app->bind('notify.client', function (Application $app) {
+            $config = $app['config']['notification-channels']['notify'];
+
+            return $app->make(Client::class, compact('config'));
+        });
+
+        $this->app->bind(NotifyService::class, function (Application $app) {
+            return new NotifyService($app->make('notify.client'), new Collection);
         });
 
         $this->app->when(Notice::class)

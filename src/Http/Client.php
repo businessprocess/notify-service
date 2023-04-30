@@ -3,10 +3,10 @@
 namespace NotificationChannels\Http;
 
 use Illuminate\Cache\Repository;
-use Illuminate\Http\Client\RequestException;
-use NotificationChannels\Contracts\HttpClient;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
+use NotificationChannels\Contracts\HttpClient;
 
 class Client extends BaseClient implements HttpClient
 {
@@ -17,6 +17,7 @@ class Client extends BaseClient implements HttpClient
         $this->processOptions($config);
 
         $this->http = $factory->asJson()
+            ->acceptJson()
             ->baseUrl($this->config['url'])
             ->connectTimeout(80)
             ->timeout(30);
@@ -25,21 +26,15 @@ class Client extends BaseClient implements HttpClient
     }
 
     /**
-     * @return void
      * @throws RequestException
      */
     public function authenticate(): void
     {
         if (isset($this->config['login']) && isset($this->config['password'])) {
-            $this->config['authentication'] = $this->cache->remember(__CLASS__, 12 * 3600, function () {
-                return $this->http->post('login', [
-                    'login' => $this->config['login'],
-                    'password' => $this->config['password'],
-                ])->throw()->json('authToken');
-            });
+            $this->config['authentication'] = $this->auth()->getAuthToken();
         }
 
-        if (!isset($this->config['authentication'])) {
+        if (! isset($this->config['authentication'])) {
             throw new \InvalidArgumentException('Authentication is required');
         }
 
@@ -50,21 +45,34 @@ class Client extends BaseClient implements HttpClient
     }
 
     /**
-     * @return Factory|PendingRequest
+     * @throws RequestException
      */
+    protected function login(): array
+    {
+        return $this->getHttp()->post('login', [
+            'login' => $this->config['login'],
+            'password' => $this->config['password'],
+        ])->throw()->json();
+    }
+
     public function getHttp(): Factory|PendingRequest
     {
         return $this->http;
     }
 
     /**
-     * @param string $uri
-     * @param array $options
-     * @return array|null
      * @throws RequestException
      */
     public function post(string $uri, array $options = []): ?array
     {
-        return $this->getHttp()->post($uri, $options)->throw()->json();
+        return $this->getHttp()->post($uri, $this->prepare($options))->throw()->json();
+    }
+
+    /**
+     * @throws RequestException
+     */
+    public function get(string $uri, array $options = []): ?array
+    {
+        return $this->getHttp()->get($uri, $this->prepare($options))->throw()->json();
     }
 }

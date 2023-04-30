@@ -41,6 +41,6 @@ class Validator
 
     public function __call(string $name, array $arguments)
     {
-        return !empty($arguments[0]) && is_string($arguments[0]);
+        return ! empty($arguments[0]) && is_string($arguments[0]);
     }
 }

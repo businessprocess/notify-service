@@ -1,4 +1,5 @@
 <?php
+
 return [
     'messenger' => [
         'authentication' => env('MESSENGER_AUTHORIZATION'),

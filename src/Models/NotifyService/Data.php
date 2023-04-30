@@ -9,7 +9,7 @@ class Data
     protected array $items = [];
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * [
      *   "user" => [
@@ -28,20 +28,32 @@ class Data
         $this->fill($data);
     }
 
-    public function fill(array $data): static
+    public function fill(array $data = []): static
     {
-        foreach ($data as $type => $value) {
-            $this->add($value, $type);
+        if ($this->isList($data)) {
+            foreach ($data as $type => $value) {
+                $this->add($value, $type);
+            }
+        } elseif (! empty($data)) {
+            $this->add($data);
         }
 
         return $this;
+    }
+
+    private function isList($array): bool
+    {
+        foreach ($array as $item) {
+            return is_array($item);
+        }
+        return false;
     }
 
     public function add(DataObject|array $params = [], ?string $type = null): DataObject
     {
         $object = is_array($params) ? new DataObject($params) : $params;
 
-        if (!is_null($object)) {
+        if (! is_null($object)) {
             $object->setType($type);
         }
 
@@ -61,6 +73,15 @@ class Data
         foreach ($this->items as $item) {
             $items[$item->getType()] = $item->toArray();
         }
+
         return $items;
+    }
+
+    /**
+     * @return array<DataObject>
+     */
+    public function getItems(): array
+    {
+        return $this->items;
     }
 }

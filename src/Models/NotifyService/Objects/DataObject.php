@@ -4,7 +4,8 @@ namespace NotificationChannels\Models\NotifyService\Objects;
 
 class DataObject
 {
-    protected string $type;
+    protected mixed $type;
+
     protected array $attributes = [];
 
     public function __construct($data = [])
@@ -17,22 +18,20 @@ class DataObject
         return $this->attributes;
     }
 
-    /**
-     * @param string $type
-     * @return DataObject
-     */
-    public function setType(string $type): DataObject
+    public function setType(mixed $type): DataObject
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
     }
 }

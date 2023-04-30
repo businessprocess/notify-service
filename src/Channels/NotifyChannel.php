@@ -8,9 +8,6 @@ use NotificationChannels\Exceptions\NotificationMessengerException;
 class NotifyChannel extends BaseChannel
 {
     /**
-     * @param $notifiable
-     * @param Notification $notification
-     * @return void
      * @throws NotificationMessengerException
      */
     public function send($notifiable, Notification $notification): void

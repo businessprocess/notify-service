@@ -21,7 +21,7 @@ class Module extends \yii\base\Module
                 if (YII_DEBUG) {
                     throw new NotificationMessengerException($e->getMessage());
                 }
-                Yii::warning("Notification sent by channel [$driver] has failed: " . $e->getMessage(), __METHOD__);
+                Yii::warning("Notification sent by channel [$driver] has failed: ".$e->getMessage(), __METHOD__);
                 Yii::warning($e, __METHOD__);
             }
         }
@@ -29,11 +29,11 @@ class Module extends \yii\base\Module
 
     public function getChannel($driver)
     {
-        if (!isset($this->channels[$driver])) {
+        if (! isset($this->channels[$driver])) {
             throw new InvalidParamException("Unknown channel [{$driver}]");
         }
 
-        if (!is_object($this->channels[$driver])) {
+        if (! is_object($this->channels[$driver])) {
             $this->channels[$driver] = $this->createChannel($this->channels[$driver]);
         }
 

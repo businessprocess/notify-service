@@ -16,11 +16,17 @@ use NotificationChannels\Models\NotifyService\Support\Validator;
 class Destination
 {
     public const EMAIL = 'email';
+
     public const PHONE = 'phone';
+
     public const VIBER = 'viber';
+
     public const TELEGRAM = 'telegram';
+
     public const FIREBASE_TOKEN = 'firebaseToken';
+
     public const WHATSAPP = 'whatsApp';
+
     public const SMS = 'sms';
 
     public const SERVICES = [
@@ -48,6 +54,7 @@ class Destination
         foreach ($data as $key => $value) {
             $this->{$key}($value);
         }
+
         return $this;
     }
 
@@ -66,24 +73,20 @@ class Destination
         if (in_array($name, self::SERVICES)) {
             $this->setValues($name, $arguments);
         }
+
         return $this;
     }
 
-    /**
-     * @param string $type
-     * @param array $values
-     * @return void
-     */
     private function setValues(string $type, array $values): void
     {
         $keys = [];
         foreach ($this->values(...$values) as $value) {
-            if (call_user_func([$this->validator, 'is' . ucfirst($type)], $value)) {
+            if (call_user_func([$this->validator, 'is'.ucfirst($type)], $value)) {
                 $keys[] = $value;
             }
         }
 
-        if (!isset($this->services[$type])) {
+        if (! isset($this->services[$type])) {
             $this->services[$type] = [];
         }
 

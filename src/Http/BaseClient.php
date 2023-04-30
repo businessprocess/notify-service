@@ -2,25 +2,43 @@
 
 namespace NotificationChannels\Http;
 
+use NotificationChannels\Http\Response\Authenticate;
+
 abstract class BaseClient
 {
     protected array $config;
 
-    /**
-     * @param $config
-     * @return void
-     */
     public function processOptions($config): void
     {
-        if (!isset($config['url'])) {
+        if (! isset($config['url'])) {
             throw new \InvalidArgumentException('Url is required');
         }
 
         $this->config = $config;
     }
 
+    protected function auth(): Authenticate
+    {
+        return $this->cache->remember(
+            __CLASS__,
+            43200,
+            fn () => new Authenticate($this->login())
+        );
+    }
+
+    abstract protected function login();
+
     public function config($key)
     {
         return $this->config[$key] ?? null;
+    }
+
+    public function prepare(array $options = []): array
+    {
+        if (array_key_exists('userUuid', $options) && is_null($options['userUuid'])) {
+            $options['userUuid'] = $this->auth()->getUserUuid();
+        }
+
+        return $options;
     }
 }
