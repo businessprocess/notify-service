@@ -22,6 +22,7 @@ class Notify
 
             self::$instance = new NotifyService(new GuzzleClient(new Repository, $module->channels['notify']));
         }
+
         return self::$instance;
     }
 

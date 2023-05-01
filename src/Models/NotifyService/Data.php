@@ -46,6 +46,7 @@ class Data
         foreach ($array as $item) {
             return is_array($item);
         }
+
         return false;
     }
 

@@ -16,6 +16,12 @@ class Notification
 
     public const STATUS_SENDING_ERROR = 'sendingError';
 
+    public const STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_SENDED,
+        self::STATUS_SENDING_ERROR,
+    ];
+
     protected int $id;
 
     protected string $createdAt;
@@ -48,6 +54,11 @@ class Notification
         $this->options = new Options;
 
         $this->fill($data);
+    }
+
+    public function isSend(): bool
+    {
+        return $this->getStatus() === self::STATUS_SENDED;
     }
 
     public function getId(): int
