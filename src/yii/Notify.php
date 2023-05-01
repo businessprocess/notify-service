@@ -8,7 +8,8 @@ use NotificationChannels\yii\Cache\Repository;
 use Yii;
 
 /**
- * @mixin NotifyService
+ * @method static array|object getDeliveryProfiles(string $query = '', int $pageNum = 1, int $pageSize = 20, $userUuid = null)
+ * @method static array|object notifications(int $pageNum = 1, int $pageSize = 20, $userUuid = null)
  */
 class Notify
 {
@@ -21,11 +22,10 @@ class Notify
 
             self::$instance = new NotifyService(new GuzzleClient(new Repository, $module->channels['notify']));
         }
-
         return self::$instance;
     }
 
-    public function __call($name, $arguments)
+    public static function __callStatic($name, $arguments)
     {
         return self::getInstance()->{$name}(...$arguments);
     }

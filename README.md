@@ -19,6 +19,11 @@ composer require businessprocess/notify-service
 ## Usage <a name="usege-channels"></a>
 
 ```php
+    Notify::getDeliveryProfiles() - Get all delivery profiles
+    Notify::notifications() - get all notification
+```
+
+```php
 
    public function via($notifiable): array
     {
