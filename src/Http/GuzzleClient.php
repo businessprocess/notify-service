@@ -64,7 +64,7 @@ class GuzzleClient extends BaseClient implements HttpClient
      */
     public function post(string $uri, array $options = []): ?array
     {
-        $response = $this->getHttp()->post($uri, [
+        $response = $this->getHttp()->post($this->getUrl($uri), [
             RequestOptions::HEADERS => $this->getHeaders(),
             RequestOptions::JSON => $this->prepare($options),
         ]);
@@ -77,7 +77,7 @@ class GuzzleClient extends BaseClient implements HttpClient
      */
     public function get(string $uri, array $options = []): ?array
     {
-        $response = $this->getHttp()->get($uri, [
+        $response = $this->getHttp()->get($this->getUrl($uri), [
             RequestOptions::HEADERS => $this->getHeaders(),
             RequestOptions::QUERY => $this->prepare($options),
         ]);

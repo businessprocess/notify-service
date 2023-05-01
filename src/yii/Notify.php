@@ -8,8 +8,8 @@ use NotificationChannels\yii\Cache\Repository;
 use Yii;
 
 /**
- * @method static array|object getDeliveryProfiles(string $query = '', int $pageNum = 1, int $pageSize = 20, $userUuid = null)
- * @method static array|object notifications(int $pageNum = 1, int $pageSize = 20, $userUuid = null)
+ * @method static array|object getDeliveryProfiles(int $pageNum = 1, int $pageSize = 20)
+ * @method static array|object notifications(int $pageNum = 1, int $pageSize = 20)
  */
 class Notify
 {

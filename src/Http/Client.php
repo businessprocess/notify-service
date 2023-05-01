@@ -65,7 +65,7 @@ class Client extends BaseClient implements HttpClient
      */
     public function post(string $uri, array $options = []): ?array
     {
-        return $this->getHttp()->post($uri, $this->prepare($options))->throw()->json();
+        return $this->getHttp()->post($this->getUrl($uri), $this->prepare($options))->throw()->json();
     }
 
     /**
@@ -73,6 +73,6 @@ class Client extends BaseClient implements HttpClient
      */
     public function get(string $uri, array $options = []): ?array
     {
-        return $this->getHttp()->get($uri, $this->prepare($options))->throw()->json();
+        return $this->getHttp()->get($this->getUrl($uri), $this->prepare($options))->throw()->json();
     }
 }

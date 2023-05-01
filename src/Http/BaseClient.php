@@ -33,6 +33,11 @@ abstract class BaseClient
         return $this->config[$key] ?? null;
     }
 
+    public function getUrl($url): string
+    {
+        return str_replace('{userUuid}', $this->auth()->getUserUuid(), $url);
+    }
+
     public function prepare(array $options = []): array
     {
         if (array_key_exists('userUuid', $options) && is_null($options['userUuid'])) {

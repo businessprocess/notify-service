@@ -13,23 +13,25 @@ class NotifyService
     }
 
     /**
-     * @param  null  $userUuid
+     * @param int $pageNum
+     * @param int $pageSize
      * @return object|array<DeliveryProfile>
      */
-    public function getDeliveryProfiles(string $query = '', int $pageNum = 1, int $pageSize = 20, $userUuid = null): array|object
+    public function getDeliveryProfiles(int $pageNum = 1, int $pageSize = 20): array|object
     {
-        $response = $this->client->get('delivery-profiles', compact('query', 'pageNum', 'pageSize', 'userUuid'));
+        $response = $this->client->get('delivery-profiles/users/{userUuid}', compact('pageNum', 'pageSize'));
 
         return $this->toResponse($response['items'], DeliveryProfile::class);
     }
 
     /**
-     * @param  null  $userUuid
+     * @param int $pageNum
+     * @param int $pageSize
      * @return object|array<Notification>
      */
-    public function notifications(int $pageNum = 1, int $pageSize = 20, $userUuid = null): array|object
+    public function notifications(int $pageNum = 1, int $pageSize = 20): array|object
     {
-        $response = $this->client->get('notifications', compact('pageNum', 'pageSize', 'userUuid'));
+        $response = $this->client->get('notifications', compact('pageNum', 'pageSize'));
 
         return $this->toResponse($response['items'], Notification::class);
     }
