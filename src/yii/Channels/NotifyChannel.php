@@ -11,9 +11,14 @@ class NotifyChannel extends \yii\base\BaseObject
 {
     private HttpClient $client;
 
-    public function __construct(array $config)
+    public function __construct(protected array $config)
     {
         $this->client = new GuzzleClient(new Repository, $config);
+    }
+
+    public function getConfig(): array
+    {
+        return $this->config;
     }
 
     public function send($notifiable, Notification $notification): void

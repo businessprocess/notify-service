@@ -20,7 +20,7 @@ class Notify
         if (is_null(self::$instance)) {
             $module = Yii::$app->getModule('notifications');
 
-            self::$instance = new NotifyService(new GuzzleClient(new Repository, $module->channels['notify']));
+            self::$instance = new NotifyService(new GuzzleClient(new Repository, $module->getChannel('notify')->getConfig()));
         }
 
         return self::$instance;
