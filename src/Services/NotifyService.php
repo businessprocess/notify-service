@@ -13,8 +13,6 @@ class NotifyService
     }
 
     /**
-     * @param int $pageNum
-     * @param int $pageSize
      * @return object|array<DeliveryProfile>
      */
     public function getDeliveryProfiles(int $pageNum = 1, int $pageSize = 20): array|object
@@ -25,8 +23,6 @@ class NotifyService
     }
 
     /**
-     * @param int $pageNum
-     * @param int $pageSize
      * @return object|array<Notification>
      */
     public function notifications(int $pageNum = 1, int $pageSize = 20): array|object
