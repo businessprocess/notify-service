@@ -25,13 +25,24 @@ composer require businessprocess/notify-service
 
 ```php
 
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+
+class MyNotification extends Notification implements ShouldQueue
+{    
    public function via($notifiable): array
     {
         return ['notify'];
     }
 
-    public function toNotify($notifiable, \NotificationChannels\Models\NotifyService\Notice $notice)
+    public function toNotify($notifiable)
     {
+    
+        $notice = \NotificationChannels\Models\NotifyService\Notice::create('profileUuid');
+        
         $notice->setLangCode(app()->getLocale())
             ->setTimeToDelivery(now()->addHour())
             ->setText('Welcome to hell')
@@ -48,6 +59,18 @@ composer require businessprocess/notify-service
         return $notice;
         //return \NotificationChannels\Models\NotifyService\Notice::create('ArrayOfParams');
     }
+
+}
+```
+
+```php
+    //call
+    $user->notify(new MyNotification());
+    
+    //or multiply users
+    
+    Notification::send($users, new MyNotification());
+
 ```
 
 #### Available Options
