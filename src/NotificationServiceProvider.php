@@ -12,6 +12,7 @@ use NotificationChannels\Channels\MessengerChannel;
 use NotificationChannels\Channels\NotifyChannel;
 use NotificationChannels\Channels\SmartSenderChannel;
 use NotificationChannels\Http\Client;
+use NotificationChannels\Models\NotifyService\Notice;
 use NotificationChannels\Services\NotifyService;
 
 class NotificationServiceProvider extends ServiceProvider implements DeferrableProvider
@@ -59,6 +60,10 @@ class NotificationServiceProvider extends ServiceProvider implements DeferrableP
         $this->app->bind(NotifyService::class, function (Application $app) {
             return new NotifyService($app->make('notify.client'), new Collection);
         });
+
+        $this->app->when(Notice::class)
+            ->needs('$profileUuid')
+            ->giveConfig('notification-channels.notify.profileUuid');
     }
 
     /**

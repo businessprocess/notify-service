@@ -39,8 +39,7 @@ class MyNotification extends Notification implements ShouldQueue
     }
 
     public function toNotify($notifiable)
-    {
-    
+    {    
         $notice = \NotificationChannels\Models\NotifyService\Notice::create('profileUuid');
         
         $notice->setLangCode(app()->getLocale())
@@ -56,10 +55,19 @@ class MyNotification extends Notification implements ShouldQueue
             ->email($notifiable->email)
             ->viber($notifiable->phone);    
         
-        return $notice;
-        //return \NotificationChannels\Models\NotifyService\Notice::create('ArrayOfParams');
+        return $notice;     
     }
+}
+```
 
+```php
+
+    // Notice object can be obtained from the container with the addition of the profileUuid from the configuration
+    
+    public function toNotify($notifiable, \NotificationChannels\Models\NotifyService\Notice $notice)
+    {
+        return $notice->fill('ArrayOfParams');
+    }
 }
 ```
 
