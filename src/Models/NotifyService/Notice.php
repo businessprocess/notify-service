@@ -27,6 +27,8 @@ class Notice
 
     protected ?string $emitter = null;
 
+    protected mixed $responseCallback = null;
+
     public function __construct($profileUuid = null)
     {
         if (! is_null($profileUuid)) {
@@ -35,6 +37,20 @@ class Notice
         $this->destination = new Destination();
         $this->options = new Options();
         $this->data = new Data();
+    }
+
+    public function responseCallback(callable $callback): static
+    {
+        $this->responseCallback = $callback;
+
+        return $this;
+    }
+
+    public function response(?array $response): void
+    {
+        if (! is_null($this->responseCallback)) {
+            call_user_func($this->responseCallback, $response);
+        }
     }
 
     public static function create($data = []): static

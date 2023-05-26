@@ -54,6 +54,13 @@ class MyNotification extends Notification implements ShouldQueue
         $notice->destination()
             ->email($notifiable->email)
             ->viber($notifiable->phone);    
+            
+        $notice->responseCallback(function (?array $response){
+            // can be processed response from notify service
+            if(! is_null($response)){
+                echo data_get($response, 'id');
+            }
+        })
         
         return $notice;     
     }
