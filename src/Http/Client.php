@@ -19,7 +19,6 @@ class Client extends BaseClient implements HttpClient
         $this->http = $factory->asJson()
             ->acceptJson()
             ->baseUrl($this->config['url'])
-            ->connectTimeout(80)
             ->timeout(30);
 
         $this->authenticate();
