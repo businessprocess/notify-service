@@ -1,9 +1,15 @@
 Notification channels
 =============================
-
+![PHP 8.x](https://img.shields.io/badge/PHP-%5E8.0-blue)
+[![Laravel 8.x](https://img.shields.io/badge/Laravel-8.x-orange.svg)](http://laravel.com)
+[![Yii 2.x](https://img.shields.io/badge/Yii-2.x-orange)](https://www.yiiframework.com/doc/guide/2.0/ru)
 ![Latest Stable Version](https://poser.pugx.org/businessprocess/notify-service/v/stable)
+![Release date](https://img.shields.io/github/release-date/businessprocess/notify-service)
+![Release Version](https://img.shields.io/github/v/release/businessprocess/notify-service)
 ![Total Downloads](https://poser.pugx.org/businessprocess/notify-service/downloads)
+![Pull requests](https://img.shields.io/bitbucket/pr/businessprocess/notify-service)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+![Stars](https://img.shields.io/github/stars/businessprocess/notify-service?style=social)
 
 Notification messenger channel to Laravel FrameWork v6.0 and above.
 
