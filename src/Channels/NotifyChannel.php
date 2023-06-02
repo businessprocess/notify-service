@@ -28,7 +28,7 @@ class NotifyChannel extends BaseChannel
             }
         } catch (\Exception $e) {
             report($e);
-            throw new NotificationMessengerException('NotifyService sending error');
+            throw new NotificationMessengerException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }
