@@ -17,7 +17,6 @@ class GuzzleClient extends BaseClient implements HttpClient
         $this->http = new \GuzzleHttp\Client([
             'base_uri' => $this->config['url'],
             RequestOptions::HEADERS => [
-                'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 RequestOptions::CONNECT_TIMEOUT => $config['connect_timeout'] ?? 80,
                 RequestOptions::TIMEOUT => $config['timeout'] ?? 30,
@@ -45,6 +44,9 @@ class GuzzleClient extends BaseClient implements HttpClient
     protected function login(): array
     {
         $response = $this->getHttp()->post('login', [
+            RequestOptions::HEADERS => [
+                'Content-Type' => 'application/json',
+            ],
             RequestOptions::JSON => [
                 'login' => $this->config['login'],
                 'password' => $this->config['password'],
@@ -59,14 +61,25 @@ class GuzzleClient extends BaseClient implements HttpClient
         return $this->http;
     }
 
-    /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
     public function post(string $uri, array $options = []): ?array
     {
+        $options = $this->prepare($options);
+        $bodyFormat = RequestOptions::JSON;
+
+        if (! empty($options['file'])) {
+            $bodyFormat = RequestOptions::MULTIPART;
+
+            $options = array_map(function ($value, $key) {
+                return $key === 'file' ? $value : [
+                    'name' => $key,
+                    'contents' => is_array($value) ? json_encode($value) : $value,
+                ];
+            }, $options, array_keys($options));
+        }
+
         $response = $this->getHttp()->post($this->getUrl($uri), [
             RequestOptions::HEADERS => $this->getHeaders(),
-            RequestOptions::JSON => $this->prepare($options),
+            $bodyFormat => $options,
         ]);
 
         return json_decode($response->getBody()->getContents(), true);

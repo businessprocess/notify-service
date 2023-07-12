@@ -3,6 +3,7 @@
 namespace NotificationChannels\Models\NotifyService;
 
 use DateTimeInterface;
+use NotificationChannels\Models\NotifyService\Objects\File;
 use NotificationChannels\Models\NotifyService\Traits\Fillable;
 
 class Notice
@@ -29,6 +30,8 @@ class Notice
 
     protected mixed $responseCallback = null;
 
+    protected File $file;
+
     public function __construct($profileUuid = null)
     {
         if (! is_null($profileUuid)) {
@@ -37,6 +40,7 @@ class Notice
         $this->destination = new Destination();
         $this->options = new Options();
         $this->data = new Data();
+        $this->file = new File();
     }
 
     public function responseCallback(callable $callback): static
@@ -70,6 +74,7 @@ class Notice
             'timeToDelivery' => $this->getTimeToDelivery(),
             'key' => $this->getKey(),
             'emitter' => $this->getEmitter(),
+            'file' => $this->getFile(),
         ];
     }
 
@@ -219,5 +224,26 @@ class Notice
         }
 
         return $this;
+    }
+
+    public function setFile(mixed $path): static
+    {
+        if ($path instanceof File) {
+            $this->file = $path;
+        } elseif (is_array($path)) {
+            $this->file->fill($path);
+        } else {
+            $this->file->setPath($path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFile(): array
+    {
+        return $this->file->toArray();
     }
 }

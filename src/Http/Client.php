@@ -16,8 +16,7 @@ class Client extends BaseClient implements HttpClient
     {
         $this->processOptions($config);
 
-        $this->http = $factory->asJson()
-            ->acceptJson()
+        $this->http = $factory->acceptJson()
             ->baseUrl($this->config['url'])
             ->timeout(30);
 
@@ -64,7 +63,25 @@ class Client extends BaseClient implements HttpClient
      */
     public function post(string $uri, array $options = []): ?array
     {
-        return $this->getHttp()->post($this->getUrl($uri), $this->prepare($options))->throw()->json();
+        $options = $this->prepare($options);
+
+        if (! empty($options['file'])) {
+
+            $options = array_map(function ($value, $key) {
+                return $key === 'file' ? $value : [
+                    'name' => $key,
+                    'contents' => is_array($value) ? json_encode($value) : $value,
+                ];
+            }, $options, array_keys($options));
+
+            return $this->getHttp()
+                ->asMultipart()
+                ->post($this->getUrl($uri), $options)
+                ->throw()
+                ->json();
+        }
+
+        return $this->getHttp()->asJson()->post($this->getUrl($uri), $this->prepare($options))->throw()->json();
     }
 
     /**
@@ -72,6 +89,6 @@ class Client extends BaseClient implements HttpClient
      */
     public function get(string $uri, array $options = []): ?array
     {
-        return $this->getHttp()->get($this->getUrl($uri), $this->prepare($options))->throw()->json();
+        return $this->getHttp()->asJson()->get($this->getUrl($uri), $this->prepare($options))->throw()->json();
     }
 }

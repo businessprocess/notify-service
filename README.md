@@ -61,6 +61,9 @@ class MyNotification extends Notification implements ShouldQueue
             ->email($notifiable->email)
             ->viber($notifiable->phone);    
             
+        //add file to notice
+        $notice->setFile(storage_path('./random.jpg'))
+            
         $notice->responseCallback(function (?array $response){
             // can be processed response from notify service
             if(! is_null($response)){
