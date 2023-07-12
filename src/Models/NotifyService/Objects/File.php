@@ -50,7 +50,7 @@ class File
         return $this;
     }
 
-    public function getContents(): string
+    public function getContents()
     {
         return fopen($this->path, 'r');
     }
