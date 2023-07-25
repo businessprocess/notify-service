@@ -81,7 +81,7 @@ class Client extends BaseClient implements HttpClient
                 ->json();
         }
 
-        return $this->getHttp()->asJson()->post($this->getUrl($uri), $this->prepare($options))->throw()->json();
+        return $this->getHttp()->asJson()->post($this->getUrl($uri), $options)->throw()->json();
     }
 
     /**

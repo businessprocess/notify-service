@@ -35,7 +35,7 @@ abstract class BaseClient
 
     public function getUrl($url): string
     {
-        return str_replace('{userUuid}', $this->auth()->getUserUuid(), $url);
+        return str_contains($url, 'userUuid') ? str_replace('{userUuid}', $this->auth()->getUserUuid(), $url) : $url;
     }
 
     public function prepare(array $options = []): array
