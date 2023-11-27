@@ -12,7 +12,7 @@ return [
     ],
     'smart-sender' => [
         'url' => env('SMART_SENDER_HOST'),
-        'authentication' => env('SMART_SENDER_AUTHORIZATION'),
+        'api-key' => env('SMART_SENDER_AUTHORIZATION'),
     ],
     'notify' => [
         'url' => env('NOTIFY_SERVICE_HOST'),

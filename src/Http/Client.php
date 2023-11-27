@@ -28,6 +28,14 @@ class Client extends BaseClient implements HttpClient
      */
     public function authenticate(): void
     {
+        if (isset($this->config['api-key'])) {
+            $this->http->withHeaders([
+                'API-KEY' => $this->config['api-key'],
+            ]);
+
+            return;
+        }
+
         if (isset($this->config['login']) && isset($this->config['password'])) {
             $this->config['authentication'] = $this->auth()->getAuthToken();
         }
@@ -38,7 +46,6 @@ class Client extends BaseClient implements HttpClient
 
         $this->http->withHeaders([
             'Authorization' => $this->config['authentication'],
-            'API-KEY' => $this->config['authentication'],
         ]);
     }
 
