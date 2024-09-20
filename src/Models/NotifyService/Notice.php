@@ -10,7 +10,9 @@ class Notice
 {
     use Fillable;
 
-    protected string $profileUuid;
+    protected ?string $profileUuid = null;
+
+    protected ?string $profileName = null;
 
     protected string $langCode;
 
@@ -37,10 +39,11 @@ class Notice
         if (! is_null($profileUuid)) {
             $this->setProfileUuid($profileUuid);
         }
-        $this->destination = new Destination();
-        $this->options = new Options();
-        $this->data = new Data();
-        $this->file = new File();
+
+        $this->destination = new Destination;
+        $this->options = new Options;
+        $this->data = new Data;
+        $this->file = new File;
     }
 
     public function responseCallback(callable $callback): static
@@ -59,13 +62,14 @@ class Notice
 
     public static function create($data = []): static
     {
-        return (new static())->fill($data);
+        return (new static)->fill($data);
     }
 
     public function toArray(): array
     {
         return [
             'profileUuid' => $this->getProfileUuid(),
+            'profileName' => $this->getProfileName(),
             'langCode' => $this->getLangCode(),
             'destination' => $this->getDestination(),
             'data' => $this->getData(),
@@ -121,7 +125,7 @@ class Notice
         return $this->text;
     }
 
-    protected function getProfileUuid(): string
+    protected function getProfileUuid(): ?string
     {
         return $this->profileUuid;
     }
@@ -245,5 +249,15 @@ class Notice
     public function getFile(): array
     {
         return $this->file->toArray();
+    }
+
+    public function getProfileName(): ?string
+    {
+        return $this->profileName;
+    }
+
+    public function setProfileName(?string $profileName): void
+    {
+        $this->profileName = $profileName;
     }
 }

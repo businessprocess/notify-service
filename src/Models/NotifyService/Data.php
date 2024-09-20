@@ -8,21 +8,6 @@ class Data
 {
     protected array $items = [];
 
-    /**
-     * @param  array  $data
-     *
-     * [
-     *   "user" => [
-     *      "value" => ["Alex"],
-     *      "groupType": “list”,
-     *      "limit": 10
-     *    ],
-     *   "count" => [
-     *      "value" => 1,
-     *      "groupType": “sum”,
-     *    ]
-     * ]
-     */
     public function __construct(array $data = [])
     {
         $this->fill($data);
@@ -35,7 +20,7 @@ class Data
                 $this->add($value, $type);
             }
         } elseif (! empty($data)) {
-            $this->add($data);
+            $this->setItems($data);
         }
 
         return $this;
@@ -71,8 +56,12 @@ class Data
     public function toArray(): array
     {
         $items = [];
-        foreach ($this->items as $item) {
-            $items[$item->getType()] = $item->toArray();
+        foreach ($this->items as $key => $item) {
+            if ($item instanceof DataObject) {
+                $items[$item->getType()] = $item->toArray();
+            } else {
+                $items[$key] = $item;
+            }
         }
 
         return $items;
@@ -84,5 +73,10 @@ class Data
     public function getItems(): array
     {
         return $this->items;
+    }
+
+    public function setItems(array $items): void
+    {
+        $this->items = $items;
     }
 }

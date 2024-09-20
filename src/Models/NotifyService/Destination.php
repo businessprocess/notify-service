@@ -45,7 +45,7 @@ class Destination
 
     public function __construct(array $data = [])
     {
-        $this->validator = new Validator();
+        $this->validator = new Validator;
         $this->fill($data);
     }
 

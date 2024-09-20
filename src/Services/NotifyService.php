@@ -8,9 +8,7 @@ use NotificationChannels\Models\NotifyService\Handbook\Notification;
 
 class NotifyService
 {
-    public function __construct(protected HttpClient $client, protected $collection = null)
-    {
-    }
+    public function __construct(protected HttpClient $client, protected $collection = null) {}
 
     /**
      * @return object|array<DeliveryProfile>

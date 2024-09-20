@@ -7,9 +7,7 @@ use NotificationChannels\Contracts\HttpClient;
 
 abstract class BaseChannel
 {
-    public function __construct(protected HttpClient $client)
-    {
-    }
+    public function __construct(protected HttpClient $client) {}
 
     abstract public function send($notifiable, Notification $notification): void;
 }

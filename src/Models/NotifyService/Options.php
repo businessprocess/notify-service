@@ -3,14 +3,18 @@
 namespace NotificationChannels\Models\NotifyService;
 
 use NotificationChannels\Models\NotifyService\Objects\Email;
+use NotificationChannels\Models\NotifyService\Objects\Telegram;
 
 class Options
 {
     protected Email $email;
 
+    private Telegram $telegram;
+
     public function __construct($data = [])
     {
-        $this->email = new Email();
+        $this->email = new Email;
+        $this->telegram = new Telegram;
         $this->fill($data);
     }
 
@@ -42,10 +46,20 @@ class Options
         return $this->email;
     }
 
+    public function telegram($token = null): Telegram
+    {
+        if (! is_null($token)) {
+            $this->telegram->setToken($token);
+        }
+
+        return $this->telegram;
+    }
+
     public function toArray(): array
     {
         return array_filter([
             'email' => $this->email->toArray(),
+            'telegram' => $this->telegram->toArray(),
         ]);
     }
 }

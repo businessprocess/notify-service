@@ -20,6 +20,8 @@ class DeliveryProfile
 
     protected ?string $name = null;
 
+    protected ?string $projectUuid = null;
+
     protected ?string $userUuid = null;
 
     protected ?string $telegramToken = null;
@@ -243,5 +245,15 @@ class DeliveryProfile
     public function setTimeToDelivery($value): void
     {
         $this->groupByTimeToDelivery->setTimeToDelivery($value);
+    }
+
+    public function getProjectUuid(): ?string
+    {
+        return $this->projectUuid;
+    }
+
+    public function setProjectUuid(?string $projectUuid): void
+    {
+        $this->projectUuid = $projectUuid;
     }
 }

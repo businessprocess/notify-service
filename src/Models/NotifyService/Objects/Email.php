@@ -12,7 +12,7 @@ class Email
 
     protected ?string $subject = null;
 
-    protected bool|null $isHtml = null;
+    protected ?bool $isHtml = null;
 
     public function toArray(): array
     {
