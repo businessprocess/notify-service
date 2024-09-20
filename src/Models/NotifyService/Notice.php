@@ -87,19 +87,25 @@ class Notice
         return $this->toArray();
     }
 
-    public function setDestination(array $data = []): void
+    public function setDestination(array $data = []): static
     {
         $this->destination->fill($data);
+
+        return $this;
     }
 
-    public function setData(array $data = []): void
+    public function setData(array $data = []): static
     {
         $this->data->fill($data);
+
+        return $this;
     }
 
-    public function setOptions(array $data = []): void
+    public function setOptions(array $data = []): static
     {
         $this->options->fill($data);
+
+        return $this;
     }
 
     public function data(): Data
@@ -256,8 +262,10 @@ class Notice
         return $this->profileName;
     }
 
-    public function setProfileName(?string $profileName): void
+    public function setProfileName(?string $profileName): static
     {
         $this->profileName = $profileName;
+
+        return $this;
     }
 }
