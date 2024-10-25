@@ -26,6 +26,11 @@ abstract class BaseClient
         );
     }
 
+    protected function clearCache(): void
+    {
+        $this->cache->forget(__CLASS__);
+    }
+
     abstract protected function login();
 
     public function config($key)

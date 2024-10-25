@@ -2,9 +2,11 @@
 
 namespace NotificationChannels\Http;
 
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
 use NotificationChannels\Contracts\Cache;
 use NotificationChannels\Contracts\HttpClient;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class GuzzleClient extends BaseClient implements HttpClient
 {
@@ -61,7 +63,7 @@ class GuzzleClient extends BaseClient implements HttpClient
         return $this->http;
     }
 
-    public function post(string $uri, array $options = []): ?array
+    public function post(string $uri, array $options = [], int $tries = 2): ?array
     {
         $options = $this->prepare($options);
         $bodyFormat = RequestOptions::JSON;
@@ -77,10 +79,23 @@ class GuzzleClient extends BaseClient implements HttpClient
             }, $options, array_keys($options));
         }
 
-        $response = $this->getHttp()->post($this->getUrl($uri), [
-            RequestOptions::HEADERS => $this->getHeaders(),
-            $bodyFormat => $options,
-        ]);
+        try {
+            $response = $this->getHttp()->post($this->getUrl($uri), [
+                RequestOptions::HEADERS => $this->getHeaders(),
+                $bodyFormat => $options,
+            ]);
+        } catch (RequestException $e) {
+            if ($e->getCode() === HttpResponse::HTTP_UNAUTHORIZED) {
+                $this->clearCache();
+                $this->config['authentication'] = $this->auth()->getAuthToken();
+            }
+            if ($tries > 0) {
+                $tries--;
+
+                return $this->post($uri, $options, $tries);
+            }
+            throw $e;
+        }
 
         return json_decode($response->getBody()->getContents(), true);
     }
@@ -88,12 +103,25 @@ class GuzzleClient extends BaseClient implements HttpClient
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get(string $uri, array $options = []): ?array
+    public function get(string $uri, array $options = [], int $tries = 2): ?array
     {
-        $response = $this->getHttp()->get($this->getUrl($uri), [
-            RequestOptions::HEADERS => $this->getHeaders(),
-            RequestOptions::QUERY => $this->prepare($options),
-        ]);
+        try {
+            $response = $this->getHttp()->get($this->getUrl($uri), [
+                RequestOptions::HEADERS => $this->getHeaders(),
+                RequestOptions::QUERY => $this->prepare($options),
+            ]);
+        } catch (RequestException $e) {
+            if ($e->getCode() === HttpResponse::HTTP_UNAUTHORIZED) {
+                $this->clearCache();
+                $this->config['authentication'] = $this->auth()->getAuthToken();
+            }
+            if ($tries > 0) {
+                $tries--;
+
+                return $this->get($uri, $options, $tries);
+            }
+            throw $e;
+        }
 
         return json_decode($response->getBody()->getContents(), true);
     }
