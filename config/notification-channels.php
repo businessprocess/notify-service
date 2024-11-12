@@ -16,8 +16,6 @@ return [
     ],
     'notify' => [
         'url' => env('NOTIFY_SERVICE_HOST'),
-        'login' => env('NOTIFY_LOGIN'),
-        'password' => env('NOTIFY_PASSWORD'),
         'profileUuid' => env('NOTIFY_PROFILE_UUID'),
     ],
 ];

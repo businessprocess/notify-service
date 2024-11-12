@@ -2,68 +2,27 @@
 
 namespace NotificationChannels\Http;
 
-use Illuminate\Cache\Repository;
+use Closure;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\RequestException;
 use NotificationChannels\Contracts\HttpClient;
+use OidcAuth\Service\OidcService;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class Client extends BaseClient implements HttpClient
 {
-    private PendingRequest|Factory $http;
+    private PendingRequest|Factory $client;
 
-    public function __construct(Factory $factory, protected Repository $cache, array $config = [])
+    public function __construct(Factory $factory, protected OidcService $auth, protected array $config = [])
     {
-        $this->processOptions($config);
-
-        $this->http = $factory->acceptJson()
+        $this->client = $factory->acceptJson()
             ->baseUrl($this->config['url'])
-            ->timeout(30);
-
-        $this->authenticate();
-    }
-
-    /**
-     * @throws RequestException
-     */
-    public function authenticate(): void
-    {
-        if (isset($this->config['api-key'])) {
-            $this->http->withHeaders([
-                'API-KEY' => $this->config['api-key'],
+            ->timeout(30)
+            ->withHeaders([
+                'Authorization' => $this->auth->serviceToken(),
+                'API-KEY' => $this->config('api-key'),
             ]);
-
-            return;
-        }
-
-        if (isset($this->config['login']) && isset($this->config['password'])) {
-            $this->config['authentication'] = $this->auth()->getAuthToken();
-        }
-
-        if (! isset($this->config['authentication'])) {
-            throw new \InvalidArgumentException('Authentication is required');
-        }
-
-        $this->http->withHeaders([
-            'Authorization' => $this->config['authentication'],
-        ]);
-    }
-
-    /**
-     * @throws RequestException
-     */
-    protected function login(): array
-    {
-        return $this->getHttp()->post('login', [
-            'login' => $this->config['login'],
-            'password' => $this->config['password'],
-        ])->throw()->json();
-    }
-
-    public function getHttp(): Factory|PendingRequest
-    {
-        return $this->http;
     }
 
     /**
@@ -71,8 +30,6 @@ class Client extends BaseClient implements HttpClient
      */
     public function post(string $uri, array $options = []): ?array
     {
-        $options = $this->prepare($options);
-
         if (! empty($options['file'])) {
 
             $options = array_map(function ($value, $key) {
@@ -82,18 +39,18 @@ class Client extends BaseClient implements HttpClient
                 ];
             }, $options, array_keys($options));
 
-            return $this->getHttp()
+            return $this->client
                 ->retry(3, 0, $this->reAuthentication())
                 ->asMultipart()
-                ->post($this->getUrl($uri), $options)
+                ->post($uri, $options)
                 ->throw()
                 ->json();
         }
 
-        return $this->getHttp()
+        return $this->client
             ->retry(3, 0, $this->reAuthentication())
             ->asJson()
-            ->post($this->getUrl($uri), $options)
+            ->post($uri, $options)
             ->throw()
             ->json();
     }
@@ -103,20 +60,19 @@ class Client extends BaseClient implements HttpClient
      */
     public function get(string $uri, array $options = []): ?array
     {
-        return $this->getHttp()->retry(3, 0, $this->reAuthentication())
+        return $this->client->retry(3, 0, $this->reAuthentication())
             ->asJson()
-            ->get($this->getUrl($uri), $this->prepare($options))
+            ->get($uri, $options)
             ->throw()
             ->json();
     }
 
-    private function reAuthentication(): \Closure
+    private function reAuthentication(): Closure
     {
-        return \Closure::fromCallable(function (\Illuminate\Http\Client\RequestException $e) {
+        return Closure::fromCallable(function (RequestException $e) {
             if ($e->getCode() === HttpResponse::HTTP_UNAUTHORIZED) {
-                $this->clearCache();
-                $this->http->withHeaders([
-                    'Authorization' => $this->auth()->getAuthToken(),
+                $this->client->withHeaders([
+                    'Authorization' => $this->auth->serviceToken(),
                 ]);
 
                 return true;

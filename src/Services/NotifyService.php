@@ -13,9 +13,9 @@ class NotifyService
     /**
      * @return object|array<DeliveryProfile>
      */
-    public function getDeliveryProfiles(int $pageNum = 1, int $pageSize = 20): array|object
+    public function getDeliveryProfiles(string $userUuid, int $pageNum = 1, int $pageSize = 20): array|object
     {
-        $response = $this->client->get('delivery-profiles/users/{userUuid}', compact('pageNum', 'pageSize'));
+        $response = $this->client->get('delivery-profiles/users/'.$userUuid, compact('pageNum', 'pageSize'));
 
         return $this->toResponse($response['items'], DeliveryProfile::class);
     }

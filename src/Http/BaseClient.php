@@ -31,8 +31,6 @@ abstract class BaseClient
         $this->cache->forget(__CLASS__);
     }
 
-    abstract protected function login();
-
     public function config($key)
     {
         return $this->config[$key] ?? null;
