@@ -70,9 +70,11 @@ class Client extends BaseClient implements HttpClient
     private function reAuthentication(): Closure
     {
         return Closure::fromCallable(function (RequestException $e) {
-            if ($e->getCode() === HttpResponse::HTTP_UNAUTHORIZED) {
-                $this->client->withHeaders([
-                    'Authorization' => $this->auth->serviceToken(),
+            if (in_array($e->getCode(), [HttpResponse::HTTP_UNAUTHORIZED, HttpResponse::HTTP_BAD_REQUEST])) {
+                $this->client->withOptions([
+                    'headers' => [
+                        'Authorization' => $this->auth->serviceToken(),
+                    ]
                 ]);
 
                 return true;
