@@ -3,6 +3,7 @@
 namespace NotificationChannels\Models\NotifyService;
 
 use NotificationChannels\Models\NotifyService\Objects\Email;
+use NotificationChannels\Models\NotifyService\Objects\Fcm;
 use NotificationChannels\Models\NotifyService\Objects\Telegram;
 
 class Options
@@ -11,10 +12,13 @@ class Options
 
     private Telegram $telegram;
 
+    private Fcm $fcm;
+
     public function __construct($data = [])
     {
         $this->email = new Email;
         $this->telegram = new Telegram;
+        $this->fcm = new Fcm;
         $this->fill($data);
     }
 
@@ -55,11 +59,21 @@ class Options
         return $this->telegram;
     }
 
+    public function fcm($data = null): Fcm
+    {
+        if (! is_null($data)) {
+            $this->fcm->setData($data);
+        }
+
+        return $this->fcm;
+    }
+
     public function toArray(): array
     {
         return array_filter([
             'email' => $this->email->toArray(),
             'telegram' => $this->telegram->toArray(),
+            'fcm' => $this->fcm->toArray(),
         ]);
     }
 }

@@ -74,7 +74,7 @@ class Client extends BaseClient implements HttpClient
                 $this->client->withOptions([
                     'headers' => [
                         'Authorization' => $this->auth->serviceToken(),
-                    ]
+                    ],
                 ]);
 
                 return true;
