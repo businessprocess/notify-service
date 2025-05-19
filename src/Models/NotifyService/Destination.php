@@ -12,6 +12,7 @@ use NotificationChannels\Models\NotifyService\Support\Validator;
  * @method Destination firebaseToken(...$values)
  * @method Destination whatsApp(...$values)
  * @method Destination sms(...$values)
+ * @method Destination telegramGateway(...$values)
  */
 class Destination
 {
@@ -29,6 +30,8 @@ class Destination
 
     public const SMS = 'sms';
 
+    public const TELEGRAM_GATEWAY = 'telegramGateway';
+
     public const SERVICES = [
         self::EMAIL,
         self::PHONE,
@@ -37,6 +40,7 @@ class Destination
         self::FIREBASE_TOKEN,
         self::WHATSAPP,
         self::SMS,
+        self::TELEGRAM_GATEWAY
     ];
 
     private Validator $validator;

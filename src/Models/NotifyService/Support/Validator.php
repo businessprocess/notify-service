@@ -39,6 +39,11 @@ class Validator
         return $this->isPhone($value);
     }
 
+    public function isTelegramGateway($value): bool
+    {
+        return $this->isPhone($value);
+    }
+
     public function __call(string $name, array $arguments)
     {
         return ! empty($arguments[0]) && is_string($arguments[0]);
